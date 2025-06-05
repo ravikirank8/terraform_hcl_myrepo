@@ -1,0 +1,130 @@
+resource "aws_instance" "web" {
+
+  instance_type = var.instance_type
+  ami           = var.ami
+
+}
+
+
+variable "instance_type" {
+
+  description = "ec2 instance type"
+  default     = "t2.micro"
+
+}
+
+variable "ami" {
+
+  description = "ec2 ami id"
+  default     = "ami-01b799c439fd5516a"
+
+}
+
+resource "aws_vpc" "KK_VPC" {
+  cidr_block = "10.0.0.0/16"
+}
+
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+# Configure the AWS Provider
+provider "aws" {
+  region = "us-east-1"
+  access_key = "cccc"
+  secret_key = "xxx"
+}
+
+
+output "web_instance_public_ip" {
+  value = aws_instance.web.public_ip
+}
+
+==================
+
+Module
+
+Navigate to the ec2_module folder and create the required files.
+
+main.tf
+
+resource "aws_instance" "web-2" {
+  ami           = var.ami
+  instance_type = var.instance_type
+  tags = {
+    Name = var.instance_name
+  }
+}
+
+variables.tf
+
+variable "ami" {
+  description = "The ID of the AMI to use for the instance"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "The type of instance to start"
+  type        = string
+}
+
+variable "instance_name" {
+  description = "The name of the instance"
+  type        = string
+}
+
+outputs.tf
+
+output "instance_public_ip" {
+  description = "The public IP of the instance"
+  value       = aws_instance.web-2.public_ip
+}
+The description is optional here.
+
+=======
+  module
+
+The contents of the main.tf file should be:
+
+module "web_instance" {
+  source = "../ec2_module"
+  ami = var.ami
+  instance_type = var.instance_type
+  instance_name = var.instance_name
+}
+
+output "instance_public_ip" {
+  value = module.web_instance.instance_public_ip
+}
+
+Use the following contents for the variables.tf file:
+
+variable "ami" {
+  description = "The ID of the AMI to use for the instance"
+  type        = string
+  default     = "ami-01b799c439fd5516a" 
+}
+
+variable "instance_type" {
+  description = "The type of instance to start"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "instance_name" {
+  description = "The name of the instance"
+  type        = string
+  default     = "web-instance-2"
+}
+
+Now, run the following commands to create the EC2 instance:
+
+terraform init
+terraform plan
+terraform apply
