@@ -1,2 +1,40 @@
 The terraform apply -refresh-only command reconciles the state with the real-world infrastructure, 
 applying changes to reach the desired state and updating the state file accordingly.
+
+Configure an S3 backend for terraform state that includes state locking and encryption.
+
+Use the provided S3 bucket with prefix my-terraform-state-bucket- and DynamoDB table my-lock-table for state locking.
+
+
+Note: The S3 bucket and the dynamodb table have already been created for you. Inspect the AWS management console to verify the names.
+
+
+
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state-bucket-<random-suffix>"
+    key            = "terraform/state"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "my-lock-table"
+  }
+}
+
+=======================
+
+Migrate the terraform state from a local backend to the configured S3 backend.
+
+Post the migration, the terraform.tfstate file won't be created within the terraform-projects folder in your terminal after apply but will be created in the S3 bucket.
+
+Note: Apply the pre-created configuration to create the first instance of your state file.
+
+Ensure you have the S3 backend configured in your Terraform configuration as detailed in the prior task.
+
+Run terraform init. When prompted, choose yes to migrate the state to the new backend. - terraform init -migrate-state
+
+
+Now, run the terraform apply command to apply the temporary file created for you.
+
+Verify if migration was successful:
+
+aws s3 ls s3://my-terraform-state-bucket-<random_suffix>/te
