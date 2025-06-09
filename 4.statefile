@@ -1,0 +1,2 @@
+The terraform apply -refresh-only command reconciles the state with the real-world infrastructure, 
+applying changes to reach the desired state and updating the state file accordingly.
