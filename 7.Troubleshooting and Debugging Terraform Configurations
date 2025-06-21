@@ -1,1 +1,18 @@
 
+Reading Terraform Plan Output
+
+export TF_LOG=DEBUG
+terraform apply
+. It can be set to DEBUG, INFO, WARN, ERROR, or TRACE.
+
+terraform state list
+
+terraform console
+> aws_s3_bucket.example.arn
+
+terraform validate
+
+terraform import
+
+export TF_LOG=DEBUG
+export TF_LOG_PATH="/tmp/terraform-project.log"
