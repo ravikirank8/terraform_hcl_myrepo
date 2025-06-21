@@ -1,0 +1,5 @@
+We have created a folder static-web-app under root folder. This folder contains files to create a simple Node.js web application which displays a one-line message.
+
+In the subsequent tasks, we will use the same application and deploy it using Terraform and CodePipeline.
+
+We have also created terraform-projects folder under root. Create all your subsequent Terraform configuration files in this repository.
